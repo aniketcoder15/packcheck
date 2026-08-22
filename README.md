@@ -1,20 +1,44 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# PackCheck – Legal Metrology Compliance System
 
-# Run and deploy your AI Studio app
+PackCheck is a digital inspection and compliance system for assessing packaged commodities under the Legal Metrology (Packaged Commodities) Rules, 2011.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/d1c2b1af-a30e-4a74-9060-548599e67427
+- Package and label image scanning
+- AI-assisted OCR and declaration extraction
+- Manufacturer, packer and importer verification
+- Net quantity and MRP validation
+- Unit Sale Price checking
+- Mandatory declaration detection
+- Font size and readability analysis
+- Legal Metrology rule-based compliance evaluation
+- Missing and non-compliant declaration detection
+- Evidence and photograph management
+- Inspector remarks and manual findings
+- Product inspection history
+- Compliance and violation dashboards
+- Role-based access for inspectors, supervisors and administrators
+- Digital inspection reports
+- Statutory notice generation
+- PDF and editable report export
 
-## Run Locally
+## Technology
 
-**Prerequisites:**  Node.js
+- React
+- TypeScript
+- Express.js
+- Vite
+- Google Gemini
+- Node.js
 
+## Running Locally
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Prerequisites
+
+- Node.js
+- Gemini API key
+
+### Installation
+
+```bash
+npm install
