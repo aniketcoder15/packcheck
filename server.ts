@@ -45,26 +45,20 @@ async function startServer() {
 
       const ai = getGeminiClient();
 
-      if (!ai || !images || images.length === 0) {
-        // Fallback intelligent rule evaluator
-        return res.json({
-          success: true,
-          source: 'rule_engine_fallback',
-          data: {
-            commodityName: commodityHint || 'Pre-Packaged Nutrition Cookies',
-            brand: 'SunHarvest Gold',
-            manufacturer: 'SunHarvest Agro Industries Pvt. Ltd.',
-            mfgAddress: 'Plot 88, Sector 38, Food Industrial Park, Kundli, Haryana - 131028',
-            countryOfOrigin: 'India',
-            netQuantity: '400 g',
-            mrp: '₹ 160.00 (inclusive of all taxes)',
-            unitSalePrice: '₹ 0.40 per g',
-            mfgDate: '08/2026',
-            expiryDate: '02/2027',
-            consumerCare: 'Consumer Care Cell: 1800-11-8899 | Email: care@sunharvest.in',
-            status: 'COMPLIANT',
-            score: 95,
-          },
+      // No API key configured — tell the caller clearly instead of faking data
+      if (!ai) {
+        console.error('GEMINI_API_KEY is missing or invalid. Set it in your deployment env vars.');
+        return res.status(500).json({
+          success: false,
+          error: 'AI analysis is not configured on the server (missing GEMINI_API_KEY).',
+        });
+      }
+
+      // No image sent — also a real error, not a case for fake data
+      if (!images || images.length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'No image was provided for analysis.',
         });
       }
 
@@ -117,21 +111,12 @@ Return ONLY a valid JSON object matching this schema:
         const cleaned = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
         parsedData = JSON.parse(cleaned);
       } catch (e) {
-        parsedData = {
-          commodityName: commodityHint || 'Pre-Packaged Consumer Product',
-          brand: 'Verified Brand',
-          manufacturer: 'Certified Manufacturer Pvt. Ltd.',
-          mfgAddress: 'Industrial Area, India',
-          countryOfOrigin: 'India',
-          netQuantity: '500 g',
-          mrp: '₹ 250.00 (inclusive of all taxes)',
-          unitSalePrice: '₹ 0.50 per g',
-          mfgDate: '08/2026',
-          expiryDate: '08/2027',
-          consumerCare: 'Helpline: 1800-00-1122 | care@company.in',
-          status: 'COMPLIANT',
-          score: 92,
-        };
+        // Parsing failed — surface the real problem instead of inventing a product
+        console.error('Failed to parse Gemini response as JSON:', responseText);
+        return res.status(502).json({
+          success: false,
+          error: 'AI response could not be parsed. Try a clearer photo of the label.',
+        });
       }
 
       return res.json({
